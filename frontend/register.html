@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register – Smart Porter</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card" style="max-width:480px;">
+      <div style="text-align:center;margin-bottom:1rem;">
+        <div class="logo" style="justify-content:center;">
+          <div class="logo-icon">🧳</div>
+          <span>Smart Porter</span>
+        </div>
+      </div>
+      <h2>Create Account</h2>
+      <p class="subtitle">Join Smart Porter today</p>
+
+      <div class="role-tabs">
+        <button type="button" class="role-tab active" data-role="PASSENGER">Passenger</button>
+        <button type="button" class="role-tab" data-role="PORTER">Porter</button>
+      </div>
+
+      <div id="alertBox"></div>
+
+      <form id="registerForm">
+        <input type="hidden" id="role" name="role" value="PASSENGER">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" class="form-control" id="fullName" required placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" class="form-control" id="email" required placeholder="you@email.com">
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" class="form-control" id="phone" required placeholder="10-digit mobile">
+        </div>
+        <div class="form-group" id="genderGroup">
+          <label>Gender</label>
+          <select class="form-control" id="gender">
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group hidden" id="experienceGroup">
+          <label>Years of Experience</label>
+          <input type="number" class="form-control" id="experience" min="0" max="40" placeholder="e.g. 5">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="form-control" id="password" required minlength="6" placeholder="Min 6 characters">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Create Account</button>
+      </form>
+
+      <p style="text-align:center;margin-top:1.5rem;font-size:0.9rem;color:var(--gray-500);">
+        Already have an account? <a href="login.html" style="color:var(--orange);font-weight:600;">Login</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('role') === 'porter') {
+      document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector('[data-role="PORTER"]').classList.add('active');
+      document.getElementById('role').value = 'PORTER';
+      document.getElementById('genderGroup').classList.add('hidden');
+      document.getElementById('experienceGroup').classList.remove('hidden');
+    }
+
+    document.querySelectorAll('.role-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('role').value = tab.dataset.role;
+        if (tab.dataset.role === 'PORTER') {
+          document.getElementById('genderGroup').classList.add('hidden');
+          document.getElementById('experienceGroup').classList.remove('hidden');
+        } else {
+          document.getElementById('genderGroup').classList.remove('hidden');
+          document.getElementById('experienceGroup').classList.add('hidden');
+        }
+      });
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const alertBox = document.getElementById('alertBox');
+      const formData = new FormData();
+      formData.append('role', document.getElementById('role').value);
+      formData.append('fullName', document.getElementById('fullName').value);
+      formData.append('email', document.getElementById('email').value);
+      formData.append('phone', document.getElementById('phone').value);
+      formData.append('password', document.getElementById('password').value);
+      formData.append('gender', document.getElementById('gender').value);
+      formData.append('experience', document.getElementById('experience').value || '0');
+
+      try {
+        const res = await fetch('../register', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) {
+          alertBox.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
+          setTimeout(() => window.location.href = 'login.html', 1500);
+        } else {
+          alertBox.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+        }
+      } catch (err) {
+        alertBox.innerHTML = '<div class="alert alert-info">Demo mode: Registration would be saved to database when backend is running. Please login with demo credentials.</div>';
+      }
+    });
+  </script>
+</body>
+</html>

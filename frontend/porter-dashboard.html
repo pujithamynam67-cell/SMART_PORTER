@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Porter Dashboard – Smart Porter</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">🧳</div>
+        <span>Smart Porter</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="#" class="active" data-sec="home">🏠 <span>Home</span></a></li>
+        <li><a href="#" data-sec="requests">📥 <span>Requests</span></a></li>
+        <li><a href="#" data-sec="mybookings">📋 <span>My Bookings</span></a></li>
+        <li><a href="#" data-sec="earnings">💰 <span>Earnings</span></a></li>
+        <li><a href="logout" onclick="sessionStorage.clear();">🚪 <span>Logout</span></a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <h1>Porter: <span id="userName">—</span></h1>
+        <div class="user-info">
+          <label class="toggle-switch" title="Go Online/Offline">
+            <input type="checkbox" id="availToggle">
+            <span class="toggle-slider"></span>
+          </label>
+          <span id="availText" style="font-size:0.9rem;margin-left:0.5rem;">Offline</span>
+          <div class="avatar" id="avatar">P</div>
+        </div>
+      </div>
+
+      <div id="homeSec">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="label">Today's Jobs</div><div class="value" id="statToday">3</div></div>
+          <div class="stat-card"><div class="label">Today's Earnings</div><div class="value" id="statEarn">₹255</div></div>
+          <div class="stat-card"><div class="label">Rating</div><div class="value" id="statRating">4.7 ⭐</div></div>
+          <div class="stat-card"><div class="label">Total Jobs</div><div class="value" id="statTotal">42</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Status</h3></div>
+          <div class="card-body">
+            <p id="verStatus">Verification: <span class="badge badge-success">VERIFIED</span></p>
+            <p style="margin-top:0.5rem;color:var(--gray-500);">Toggle the switch above to go Online and start receiving booking requests.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="requestsSec" class="hidden">
+        <div class="card">
+          <div class="card-header"><h3>Incoming Requests</h3></div>
+          <div class="card-body" id="requestsList">
+            <p style="color:var(--gray-500);">No pending requests. Stay online to receive bookings.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="mybookingsSec" class="hidden">
+        <div class="card">
+          <div class="card-header"><h3>My Bookings</h3></div>
+          <div class="card-body" style="padding:0;">
+            <table class="table">
+              <thead><tr><th>Code</th><th>Passenger</th><th>Route</th><th>Status</th><th>Fare</th><th>Action</th></tr></thead>
+              <tbody id="myBookingsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="earningsSec" class="hidden">
+        <div class="card">
+          <div class="card-header"><h3>Earnings Summary</h3></div>
+          <div class="card-body">
+            <div class="stats-grid">
+              <div class="stat-card"><div class="label">Total Earnings</div><div class="value">₹2,450</div></div>
+              <div class="stat-card"><div class="label">This Week</div><div class="value">₹680</div></div>
+              <div class="stat-card"><div class="label">Completed Jobs</div><div class="value">42</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const name = sessionStorage.getItem('name') || 'Porter';
+    document.getElementById('userName').textContent = name;
+    document.getElementById('avatar').textContent = name.charAt(0).toUpperCase();
+
+    document.getElementById('availToggle').addEventListener('change', function() {
+      document.getElementById('availText').textContent = this.checked ? 'Online' : 'Offline';
+      const fd = new FormData();
+      fd.append('action', 'toggleAvailability');
+      fetch('../api/porter', { method: 'POST', body: fd }).catch(()=>{});
+    });
+
+    // Demo requests
+    const demoRequests = [
+      { bookingId: 18, bookingCode: 'SP20261120018', passengerName: 'Kavita Nair', pickupLocation: 'Platform 1-2', dropLocation: 'Platform 5-6', estimatedFare: 50, numberOfBags: 2, serviceName: 'Basic Porter' }
+    ];
+
+    function renderRequests(list) {
+      const el = document.getElementById('requestsList');
+      if (!list.length) {
+        el.innerHTML = '<p style="color:var(--gray-500);">No pending requests.</p>';
+        return;
+      }
+      let html = '';
+      list.forEach(b => {
+        html += `<div class="porter-card" style="cursor:default;">
+          <div style="flex:1;">
+            <strong>${b.bookingCode}</strong> · ${b.passengerName}<br>
+            <span style="font-size:0.85rem;color:var(--gray-500);">${b.pickupLocation} → ${b.dropLocation} · ${b.numberOfBags} bags · ₹${b.estimatedFare}</span>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="acceptBooking(${b.bookingId})">Accept</button>
+        </div>`;
+      });
+      el.innerHTML = html;
+    }
+
+    function acceptBooking(id) {
+      const fd = new FormData();
+      fd.append('action', 'accept');
+      fd.append('bookingId', id);
+      fetch('../api/porter', { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(d => alert(d.message || (d.success ? 'Accepted!' : 'Failed')))
+        .catch(() => alert('Accepted (demo mode)'));
+      renderRequests([]);
+    }
+
+    // Navigation
+    document.querySelectorAll('[data-sec]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelectorAll('.sidebar-menu a').forEach(x => x.classList.remove('active'));
+        a.classList.add('active');
+        ['home','requests','mybookings','earnings'].forEach(s => {
+          document.getElementById(s + 'Sec').classList.add('hidden');
+        });
+        document.getElementById(a.dataset.sec + 'Sec').classList.remove('hidden');
+        if (a.dataset.sec === 'requests') {
+          fetch('../api/porter/requests').then(r=>r.json()).then(d => {
+            if (d.success) renderRequests(d.bookings);
+            else renderRequests(demoRequests);
+          }).catch(() => renderRequests(demoRequests));
+        }
+      });
+    });
+  </script>
+</body>
+</html>

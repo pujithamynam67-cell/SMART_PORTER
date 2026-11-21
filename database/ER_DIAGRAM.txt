@@ -1,0 +1,52 @@
+SMART PORTER – Entity Relationship Diagram (Textual)
+
+================================================================================
+ENTITIES & RELATIONSHIPS
+================================================================================
+
+users (user_id PK)
+  | 1:1
+  +-- passengers (passenger_id PK, user_id FK UNIQUE)
+  +-- porters (porter_id PK, user_id FK UNIQUE)
+  +-- admin (admin_id PK, user_id FK UNIQUE)
+
+stations (station_id PK)
+  | 1:N
+  +-- station_locations (location_id PK, station_id FK)
+  +-- porters.current_station_id (FK, nullable)
+  +-- porter_availability (station_id FK)
+  +-- bookings.station_id (FK)
+
+service_types (service_type_id PK)
+  | 1:N
+  +-- bookings.service_type_id (FK)
+
+bookings (booking_id PK, booking_code UNIQUE)
+  | N:1 passengers, porters, stations, station_locations (pickup/drop), service_types
+  | 1:1
+  +-- luggage_details
+  +-- fare_details
+  +-- payments
+  +-- feedback
+  | 1:N
+  +-- booking_status_history
+
+porters
+  | 1:1
+  +-- porter_availability
+
+notifications (user_id FK)
+fare_settings (standalone config)
+
+================================================================================
+CARDINALITY SUMMARY
+================================================================================
+users           1 ---- 1   passengers / porters / admin
+passengers      1 ---- N   bookings
+porters         1 ---- N   bookings
+stations        1 ---- N   station_locations, bookings
+service_types   1 ---- N   bookings
+bookings        1 ---- 1   luggage_details, fare_details, payments, feedback
+bookings        1 ---- N   booking_status_history
+
+Normalization: 3NF (no transitive dependencies, atomic attributes, full functional dependency on PK).

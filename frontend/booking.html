@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Porter – Smart Porter</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="passenger-dashboard.html" class="logo">
+        <div class="logo-icon">🧳</div>
+        <span>Smart Porter</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="passenger-dashboard.html">Dashboard</a></li>
+        <li><a href="logout" onclick="sessionStorage.clear();">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="section">
+    <div class="container">
+      <div class="booking-wizard">
+        <div class="wizard-steps">
+          <div class="wizard-step active" id="ws1"><div class="circle">1</div><span>Station</span></div>
+          <div class="wizard-step" id="ws2"><div class="circle">2</div><span>Luggage</span></div>
+          <div class="wizard-step" id="ws3"><div class="circle">3</div><span>Confirm</span></div>
+          <div class="wizard-step" id="ws4"><div class="circle">4</div><span>Track</span></div>
+        </div>
+
+        <!-- Step 1: Station & Locations -->
+        <div class="card" id="step1">
+          <div class="card-header"><h3>Select Station & Locations</h3></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Railway Station</label>
+              <select class="form-control" id="stationId">
+                <option value="">Loading stations...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Pickup Location</label>
+              <select class="form-control" id="pickupId" disabled>
+                <option value="">Select station first</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Drop Location</label>
+              <select class="form-control" id="dropId" disabled>
+                <option value="">Select station first</option>
+              </select>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="goStep(2)">Continue →</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Luggage & Service -->
+        <div class="card hidden" id="step2">
+          <div class="card-header"><h3>Luggage & Service Type</h3></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Service Type</label>
+              <select class="form-control" id="serviceTypeId"></select>
+            </div>
+            <div class="form-group">
+              <label>Number of Bags</label>
+              <input type="number" class="form-control" id="numBags" min="1" max="20" value="2">
+            </div>
+            <div class="form-group">
+              <label>Luggage Type</label>
+              <select class="form-control" id="luggageType">
+                <option>Suitcase</option>
+                <option>Backpack</option>
+                <option>Mixed</option>
+                <option>Heavy Trunks</option>
+                <option>General</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Approximate Weight (kg)</label>
+              <input type="number" class="form-control" id="weight" min="1" value="25">
+            </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="isHeavy"> Heavy luggage (extra charge)
+              </label>
+            </div>
+            <div class="form-group">
+              <label>Special Instructions (optional)</label>
+              <input type="text" class="form-control" id="instructions" placeholder="e.g. Fragile items, meet at coach B4">
+            </div>
+            <div class="fare-box" id="farePreview">
+              <div style="font-size:0.9rem;color:var(--gray-500);">Estimated Fare</div>
+              <div class="total" id="fareAmount">₹ —</div>
+              <div style="font-size:0.85rem;margin-top:0.3rem;" id="fareBreakdown"></div>
+            </div>
+            <div style="display:flex;gap:0.75rem;">
+              <button class="btn btn-outline" onclick="goStep(1)">← Back</button>
+              <button class="btn btn-primary" style="flex:1;" onclick="goStep(3)">Find Porter →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Confirm & Available Porters -->
+        <div class="card hidden" id="step3">
+          <div class="card-header"><h3>Available Porters</h3></div>
+          <div class="card-body">
+            <div id="portersList">
+              <div class="spinner"></div>
+            </div>
+            <div style="display:flex;gap:0.75rem;margin-top:1rem;">
+              <button class="btn btn-outline" onclick="goStep(2)">← Back</button>
+              <button class="btn btn-primary" style="flex:1;" id="confirmBtn" onclick="confirmBooking()" disabled>Confirm Booking</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Tracking -->
+        <div class="card hidden" id="step4">
+          <div class="card-header"><h3>Booking Confirmed 🎉</h3></div>
+          <div class="card-body">
+            <div class="alert alert-success" id="confirmMsg">Your porter has been requested!</div>
+            <p><strong>Booking Code:</strong> <span id="bookingCode">—</span></p>
+            <p><strong>Estimated Fare:</strong> ₹<span id="finalFare">—</span></p>
+            <hr style="margin:1.2rem 0;border:none;border-top:1px solid var(--gray-200);">
+            <h4 style="margin-bottom:1rem;color:var(--navy);">Status Timeline (Simulated Tracking)</h4>
+            <p style="font-size:0.85rem;color:var(--gray-500);margin-bottom:1rem;">Note: This is simulated status progression for demonstration. Real GPS tracking can be integrated later.</p>
+            <div class="status-timeline" id="timeline">
+              <div class="status-item active" data-status="SEARCHING"><div class="status-dot"></div> Searching for Porter</div>
+              <div class="status-item" data-status="PORTER_ASSIGNED"><div class="status-dot"></div> Porter Assigned</div>
+              <div class="status-item" data-status="PORTER_ACCEPTED"><div class="status-dot"></div> Porter Accepted</div>
+              <div class="status-item" data-status="PORTER_ARRIVING"><div class="status-dot"></div> Porter Arriving</div>
+              <div class="status-item" data-status="SERVICE_STARTED"><div class="status-dot"></div> Service Started</div>
+              <div class="status-item" data-status="SERVICE_COMPLETED"><div class="status-dot"></div> Service Completed</div>
+            </div>
+            <a href="passenger-dashboard.html" class="btn btn-navy btn-block" style="margin-top:1.5rem;">Go to Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/booking.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+# Compiled class files
+*.class
+bin/
+build/
+target/
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Tomcat
+*.war
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Credentials (do not commit real passwords)
+**/DBConnection.java.bak

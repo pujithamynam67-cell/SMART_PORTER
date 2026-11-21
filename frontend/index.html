@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Porter – Book Trusted Railway Porters</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">🧳</div>
+        <span>Smart Porter</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#how-it-works">How it Works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="login.html" class="btn btn-outline btn-sm">Login</a></li>
+        <li><a href="register.html" class="btn btn-primary btn-sm">Sign Up</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div>
+        <h1>Your Luggage.<br><span>Our Responsibility.</span></h1>
+        <p>Book trusted railway porters in seconds. No more searching platforms or negotiating prices. Just open the app and get help.</p>
+        <div class="hero-buttons">
+          <a href="login.html" class="btn btn-primary btn-lg">Book a Porter</a>
+          <a href="register.html?role=porter" class="btn btn-outline btn-lg" style="border-color:white;color:white;">Become a Porter</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h3>Quick Booking</h3>
+        <div class="form-group">
+          <label>Select Station</label>
+          <select class="form-control" id="quickStation">
+            <option value="">Choose railway station...</option>
+            <option>New Delhi Railway Station</option>
+            <option>Chhatrapati Shivaji Maharaj Terminus</option>
+            <option>Chennai Central</option>
+            <option>Howrah Junction</option>
+            <option>Bengaluru City Junction</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Pickup Location</label>
+          <select class="form-control">
+            <option>Main Entrance</option>
+            <option>Platform</option>
+            <option>Parking Area</option>
+            <option>Waiting Hall</option>
+          </select>
+        </div>
+        <a href="login.html" class="btn btn-primary btn-block">Find Porter →</a>
+        <p style="text-align:center;margin-top:0.8rem;font-size:0.85rem;color:#64748B;">Login required to book</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-title">
+        <h2>How Smart Porter Works</h2>
+        <p>Book a porter in 4 simple steps – just like Rapido or Uber</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h4>Select Station</h4>
+          <p>Choose your railway station and pickup / drop points</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h4>Enter Luggage Details</h4>
+          <p>Tell us number of bags, weight and any special needs</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h4>Get Matched</h4>
+          <p>We show available verified porters with ratings & fare</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h4>Track & Pay</h4>
+          <p>Track status live, complete service and pay securely</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section" id="features" style="background:white;">
+    <div class="container">
+      <div class="section-title">
+        <h2>Why Choose Smart Porter?</h2>
+        <p>Designed for busy travellers at busy stations</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Instant Booking</h3>
+          <p>Find and book a verified porter in under 30 seconds. No more looking around the station.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✅</div>
+          <h3>Verified Porters</h3>
+          <p>Every porter is identity-verified by admin before they can accept bookings.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3>Transparent Fares</h3>
+          <p>See full fare breakdown before you confirm. No surprise charges at the station.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📍</div>
+          <h3>Platform-level Pickup</h3>
+          <p>Specify exact platform, entrance or waiting hall so the porter meets you at the right spot.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⭐</div>
+          <h3>Ratings & Reviews</h3>
+          <p>Choose porters based on real ratings from other passengers.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Secure & Tracked</h3>
+          <p>Every booking is tracked with status updates from assignment to completion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-title">
+        <h2>Service Types</h2>
+        <p>Choose the assistance that fits your luggage</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Basic Porter</h3>
+          <p style="font-size:1.5rem;font-weight:700;color:var(--orange);margin:0.5rem 0;">From ₹30</p>
+          <p>Standard luggage assistance within the station. Ideal for 1–2 bags.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Heavy Luggage Assistance</h3>
+          <p style="font-size:1.5rem;font-weight:700;color:var(--orange);margin:0.5rem 0;">From ₹40</p>
+          <p>For heavy or multiple large bags. Extra care and strength included.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Premium Assistance</h3>
+          <p style="font-size:1.5rem;font-weight:700;color:var(--orange);margin:0.5rem 0;">From ₹60</p>
+          <p>Priority service + help with boarding and platform navigation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section" style="background:linear-gradient(135deg,var(--navy),#1A5276);color:white;text-align:center;">
+    <div class="container">
+      <h2 style="font-size:2rem;margin-bottom:1rem;">Ready to travel light?</h2>
+      <p style="opacity:0.9;margin-bottom:1.5rem;font-size:1.1rem;">Join thousands of passengers who book porters the smart way.</p>
+      <a href="register.html" class="btn btn-primary btn-lg">Get Started Free</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="color:white;margin-bottom:1rem;">
+          <div class="logo-icon">🧳</div>
+          <span>Smart Porter</span>
+        </div>
+        <p>Your Luggage. Our Responsibility.<br>Book trusted railway porters in seconds.</p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="#">About Us</a>
+        <a href="#">Careers</a>
+        <a href="#">Contact</a>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <a href="#">Help Center</a>
+        <a href="#">Safety</a>
+        <a href="#">Terms of Service</a>
+      </div>
+      <div>
+        <h4>For Porters</h4>
+        <a href="register.html?role=porter">Become a Porter</a>
+        <a href="login.html">Porter Login</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 Smart Porter · BTech DBMS Project · Demo Application
+    </div>
+  </footer>
+</body>
+</html>
